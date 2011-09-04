@@ -3,15 +3,8 @@
 	
 	// filters property holds filter functions
 	CanvasRenderingContext2D.prototype.filters={};
-	
-
-	CanvasRenderingContext2D.prototype.filters.save = function () {
-		var imageData=this.getImageData(0,0,this.canvas.width,this.canvas.height);
-		this.ImageDataBackup=this.createImageData(imageData);
-	};
 		
 	CanvasRenderingContext2D.prototype.write = function () {
-		
 		this.clearRect(0,0,this.canvas.width,this.canvas.height);
 		this.putImageData(this.oldImageData,0,0);
 	};
