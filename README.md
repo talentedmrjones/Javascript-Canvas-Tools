@@ -6,3 +6,8 @@ The following filters are included
 
 * __grayscale__ : converts canvas to black and white
 * __noise__ : adds noise to canvas, very configurable
+
+## Usage
+
+     var context = document.getElementById('canvas1');
+     context.filter('grayscale');
