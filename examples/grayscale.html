@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<img src="fern.jpg" id="img1" />
+		<canvas id="cvs1" />
+
+		<script type="text/javascript" src="../canvasFilters.js"></script>
+
+		<script type="text/javascript">
+			(function(){
+				var img = document.getElementById('img1') 	// reference the image element
+				,cvs = document.getElementById('cvs1')		// refernce the canvas element
+				,cxt = cvs.getContext('2d');				// reference the 2d rendering context
+				
+				// set canvas dimensions
+				cvs.width=img.width;
+				cvs.height=img.height;
+				
+				// draw image to canvas
+				cxt.drawImage(img,0,0);
+				
+				// apply filter to canvas
+				cxt.filter('grayscale');
+				
+			})()
+		</script>
+		
+	</body>
+</html>

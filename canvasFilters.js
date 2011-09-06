@@ -58,8 +58,10 @@
 	};
 	
 	// NOISE
-	CanvasRenderingContext2D.prototype.filters.noise = function (o) {
-		var o = jQuery.extend(defaults,o),
+	CanvasRenderingContext2D.prototype.filters.noise = function (options) {
+		var 
+		defaults = {"mode":"grayscale","min":0,"max":255,"opacity":1,"offset":1,"value":.5,"rgb":[255,0,0]}
+		,o = jQuery.extend(defaults,options),
 		i,
 		p=this.imageData.data,
 		v, // random value between min and max range
