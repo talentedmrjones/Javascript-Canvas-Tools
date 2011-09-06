@@ -6,7 +6,7 @@
 		
 	CanvasRenderingContext2D.prototype.write = function () {
 		this.clearRect(0,0,this.canvas.width,this.canvas.height);
-		this.putImageData(this.oldImageData,0,0);
+		this.putImageData(this.imageData,0,0);
 	};
 
 
@@ -20,7 +20,7 @@
 			o.init.apply(this);
 		}
 		
-		this.oldImageData=this.getImageData(0,0,this.canvas.width,this.canvas.height);
+		this.imageData=this.getImageData(0,0,this.canvas.width,this.canvas.height);
 
 		if ('function' == typeof o.pre) {
 			o.pre.apply(this);
@@ -42,9 +42,10 @@
 	// GRAYSCALE
 	CanvasRenderingContext2D.prototype.filters.grayscale = function () {
 		var 
-		avg
-		,i
-		,p=this.oldImageData.data;
+		avg						// add pixel vaues and divide by 3
+		,i						// data index
+		,p=this.imageData.data 	// p is a much shorter reference this keeping filesize lower
+		;
 
 		for (i=0;i<p.length;i+=4) {
 			avg=((p[i]+p[i+1]+p[i+2])/3);
@@ -53,14 +54,14 @@
 			p[i+2]=avg;
 		}
 		
-		return p;
+		return true;
 	};
 	
 	// NOISE
 	CanvasRenderingContext2D.prototype.filters.noise = function (o) {
-		var o = jQuery.extend({"mode":"grayscale","min":0,"max":255,"opacity":1,"offset":1,"value":.5,"rgb":[255,0,0]},o),
+		var o = jQuery.extend(defaults,o),
 		i,
-		p=this.oldImageData.data,
+		p=this.imageData.data,
 		v, // random value between min and max range
 		
 		rand=function(){
