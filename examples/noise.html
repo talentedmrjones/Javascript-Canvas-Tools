@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<img src="fern.jpg" id="img1" />
+		<canvas id="cvs1"></canvas>
+		<canvas id="cvs2" width="300" height="300"></canvas>
+
+		<script type="text/javascript" src="../canvasFilters.js"></script>
+
+		<script type="text/javascript">
+			(function(){
+
+				/* NOISE ON AN IMAGE */
+
+				var img = document.getElementById('img1') 					// reference the image element
+				,cxt = document.getElementById('cvs1').getContext('2d'); 	// reference the 2d rendering context
+				
+				
+				// apply noise filter to canvas
+				cxt.filter('noise', {
+					opacity:.2
+					,init:function(){
+						// 'this' refers to the context instance (cxt)
+						// set canvas dimensions
+						this.canvas.width=img.width;
+						this.canvas.height=img.height;
+						
+						// draw image to canvas
+						this.drawImage(img,0,0);
+		
+					}
+				});
+				
+				/* NOISE ON A SOLID COLOR */
+				
+				var cxt2 = document.getElementById('cvs2').getContext('2d');
+				
+				cxt2.filter('noise',
+				{
+					opacity:.2
+					,init:function(){
+						// 'this' refers to cxt2
+						this.fillStyle="orange";
+						this.fillRect(0,0,this.canvas.width,this.canvas.height);
+					}
+				});
+				
+			})()
+		</script>
+		
+	</body>
+</html>

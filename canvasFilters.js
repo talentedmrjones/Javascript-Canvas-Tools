@@ -93,7 +93,6 @@
 				p[i+1]=opacity * o.rgb[1] + (1-opacity)*p[i+1];
 				p[i+2]=opacity * o.rgb[2] + (1-opacity)*p[i+2];
 			}
-			
 		};
 		
 		for (i=0; i<p.length; i+=parseInt(o.offset,10)*4) {
@@ -103,9 +102,6 @@
 		
 		
 		return p;
-	};
-	
-	
-
+	}; // noise()
 	
 })();
