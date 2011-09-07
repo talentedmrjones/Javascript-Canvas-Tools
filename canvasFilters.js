@@ -1,5 +1,16 @@
-// build filtering object
 (function(){
+	var extend = function(obj, extObj) {
+	    if (arguments.length > 2) {
+	        for (var a = 1; a < arguments.length; a++) {
+	            extend(obj, arguments[a]);
+	        }
+	    } else {
+	        for (var i in extObj) {
+	            obj[i] = extObj[i];
+	        }
+	    }
+	    return obj;
+	};
 	
 	// filters property holds filter functions
 	CanvasRenderingContext2D.prototype.filters={};
@@ -61,7 +72,7 @@
 	CanvasRenderingContext2D.prototype.filters.noise = function (options) {
 		var 
 		defaults = {"mode":"grayscale","min":0,"max":255,"opacity":.5,"offset":1,"rgb":[255,0,0]}
-		,o = jQuery.extend(defaults,options)
+		,o = extend(defaults,options)
 		,i
 		,p=this.imageData.data
 		,v // random value between min and max range
