@@ -60,45 +60,37 @@
 	// NOISE
 	CanvasRenderingContext2D.prototype.filters.noise = function (options) {
 		var 
-		defaults = {"mode":"grayscale","min":0,"max":255,"opacity":1,"offset":1,"value":.5,"rgb":[255,0,0]}
-		,o = jQuery.extend(defaults,options),
-		i,
-		p=this.imageData.data,
-		v, // random value between min and max range
-		
-		rand=function(){
+		defaults = {"mode":"grayscale","min":0,"max":255,"opacity":.5,"offset":1,"rgb":[255,0,0]}
+		,o = jQuery.extend(defaults,options)
+		,i
+		,p=this.imageData.data
+		,v // random value between min and max range
+		,rand=function(){
 			return Math.floor(o.min+(Math.random()*(o.max-o.min)));
-		};
-		
-		
-		
-		var modes={
-			
-			grayscale:function () {
-			
-				for (i=0; i<p.length; i += parseInt(o.offset)*4) {
-					v=rand();
-					// out = alpha * new + (1 - alpha) * old
-					p[i]=o.opacity * v + (1-o.opacity)*p[i];
-					p[i+1]=o.opacity * v + (1-o.opacity)*p[i+1];
-					p[i+2]=o.opacity * v + (1-o.opacity)*p[i+2];
-				}
+		}
+		,modes={
+			grayscale:function () {			
+				// out = alpha * new + (1 - alpha) * old
+				p[i]=o.opacity * v + (1-o.opacity)*p[i];
+				p[i+1]=o.opacity * v + (1-o.opacity)*p[i+1];
+				p[i+2]=o.opacity * v + (1-o.opacity)*p[i+2];
 			},
-			color:function () {
-				for (i=0; i<p.length; i += parseInt(o.offset)*4) {
-					
-					v=rand();
-					o.opacity=v/255;
-					// out = alpha * new + (1 - alpha) * old
-					p[i]=o.opacity * o.rgb[0] + (1-o.opacity)*p[i];
-					p[i+1]=o.opacity * o.rgb[1] + (1-o.opacity)*p[i+1];
-					p[i+2]=o.opacity * o.rgb[2] + (1-o.opacity)*p[i+2];
-				}
+			color:function (i) {					
+				opacity=v/255;
+				// out = alpha * new + (1 - alpha) * old
+				p[i]=opacity * o.rgb[0] + (1-opacity)*p[i];
+				p[i+1]=opacity * o.rgb[1] + (1-opacity)*p[i+1];
+				p[i+2]=opacity * o.rgb[2] + (1-opacity)*p[i+2];
 			}
 			
+		};
+		
+		for (i=0; i<p.length; i+=parseInt(o.offset,10)*4) {
+			v=rand();
+			modes[o.mode](i);
 		}
 		
-		modes[o.mode]();
+		
 		return p;
 	};
 	
