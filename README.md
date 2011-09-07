@@ -17,13 +17,15 @@ The following filters are included
   * **_init_**: a _function_ thats runs just before image data is copied. Useful for manipulating canvas with methods like fillRect() or drawImage()
 
 
-     var context = document.getElementById('canvas1').getContext('2d');  
-     // call without options  
-     context.filter('grayscale');  
-     // or call with options  
-     context.filter('noise',{opacity:.2});  
-     // or chain filters together  
-     context.fiter('grayscale').filter('noise',{opacity:.2});
+
+    var context = document.getElementById('canvas1').getContext('2d');  
+    // call without options  
+    context.filter('grayscale');  
+    // or call with options  
+    context.filter('noise',{opacity:.2});  
+    // or chain filters together  
+    context.fiter('grayscale').filter('noise',{opacity:.2});
+
 
 ### grayscale
 
