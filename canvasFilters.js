@@ -27,23 +27,17 @@
 			o={};
 		}
 		
-		if ('function' == typeof o.init) {
-			o.init.apply(this);
-		}
-		
-		this.imageData=this.getImageData(0,0,this.canvas.width,this.canvas.height);
-
 		if ('function' == typeof o.pre) {
 			o.pre.apply(this);
 		}
-
+		
+		this.imageData=this.getImageData(0,0,this.canvas.width,this.canvas.height);
 		this.filters[f].apply(this,[o]);
+		this.write();
 		
 		if ('function' == typeof o.post) {
 			o.post.apply(this);
 		}
-		
-		this.write();
 		
 		return this;
 	};

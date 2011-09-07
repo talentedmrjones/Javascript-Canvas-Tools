@@ -23,7 +23,7 @@
 				// apply noise filter to canvas
 				cxt.filter('noise', {
 					opacity:.2
-					,init:function(){
+					,pre:function(){
 						// 'this' refers to the context instance (cxt)
 						// set canvas dimensions
 						this.canvas.width=img.width;
@@ -42,7 +42,7 @@
 				cxt2.filter('noise',
 				{
 					opacity:.2
-					,init:function(){
+					,pre:function(){
 						// 'this' refers to cxt2
 						this.fillStyle="orange";
 						this.fillRect(0,0,this.canvas.width,this.canvas.height);

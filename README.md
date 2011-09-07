@@ -14,7 +14,9 @@ The following filters are included
 * _filter_: the name of the filter (e.g: 'grayscale')
 * _options_: a JSON object containing key:value pairs. Each filter has its own options, but global options are as follows:
 
-  * **_init_**: a _function_ thats runs just before image data is copied. Useful for manipulating canvas with methods like fillRect() or drawImage()
+  * **_pre_**: a _function_ thats runs just before image data is copied. Useful for manipulating canvas with methods like fillRect() or drawImage()
+  * **_post_**: a _function_ thats runs after filter has been applies. Useful for manipulating canvas with methods like fillRect() or drawImage()
+
 
 ### grayscale
 
