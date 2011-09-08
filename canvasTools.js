@@ -73,6 +73,18 @@ var CanvasTools = {
 			this.map(modes[o.mode]);
 			
 		} // noise()
+		,invert:function () {
+
+			 this.map(function(r,g,b,a){
+			 	var p = [];
+				p[0]=255-r;	  
+				p[1]=255-g;
+				p[2]=255-b;
+				p[3]=a;
+				return p;
+			 });
+	
+		} // invert ()
 	}
 	,Canvas:function (c) {
 	
