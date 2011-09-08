@@ -7,9 +7,11 @@
 	<body>
 		<img src="fern.jpg" id="img1" />
 		<canvas id="cvs1"></canvas>
-		<canvas id="cvs2" width="300" height="300"></canvas>
+		<canvas id="cvs2" width="100" height="100"></canvas>
+		<canvas id="cvs3" width="100" height="100"></canvas>
+		<canvas id="cvs4" width="100" height="100"></canvas>
 
-		<script type="text/javascript" src="../canvasFilters.js"></script>
+		<script type="text/javascript" src="../canvasTools.js"></script>
 
 		<script type="text/javascript">
 			(function(){
@@ -17,7 +19,7 @@
 				/* NOISE ON AN IMAGE */
 
 				var img = document.getElementById('img1') 					// reference the image element
-				,cxt = document.getElementById('cvs1').getContext('2d'); 	// reference the 2d rendering context
+				,cxt = new CanvasTools.Canvas('cvs1'); 	// reference the 2d rendering context
 				
 				
 				// apply noise filter to canvas
@@ -30,22 +32,53 @@
 						this.canvas.height=img.height;
 						
 						// draw image to canvas
-						this.drawImage(img,0,0);
+						this.context.drawImage(img,0,0);
 		
 					}
 				});
 				
-				/* NOISE ON A SOLID COLOR */
+				/* NOISE ON A SOLID COLOR in grayscale mode (default) */
 				
-				var cxt2 = document.getElementById('cvs2').getContext('2d');
+				var cxt2 = new CanvasTools.Canvas('cvs2');
 				
 				cxt2.filter('noise',
 				{
 					opacity:.2
 					,pre:function(){
 						// 'this' refers to cxt2
-						this.fillStyle="orange";
-						this.fillRect(0,0,this.canvas.width,this.canvas.height);
+						this.context.fillStyle="orange";
+						this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
+					}
+				});
+				
+				/* NOISE ON A SOLID COLOR in random mode*/
+				
+				var cxt3 = new CanvasTools.Canvas('cvs3');
+				
+				cxt3.filter('noise',
+				{
+					mode:'random'
+					,opacity:1
+					,pre:function(){
+						// 'this' refers to cxt2
+						this.context.fillStyle="#000000";
+						this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
+					}
+				});
+				
+				/* NOISE ON A SOLID COLOR in color mode */
+				
+				var cxt4 = new CanvasTools.Canvas('cvs4');
+				
+				cxt4.filter('noise',
+				{
+					mode:'color'
+					,rgb:[0,255,0] // green
+					,max:128 		// limit random opacity from 0 to .5
+					,pre:function(){
+						// 'this' refers to cxt2
+						this.context.fillStyle="#000000";
+						this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
 					}
 				});
 				
