@@ -1,4 +1,6 @@
 (function(){
+
+
 var rand=function(min,max){
 	min = min || 0;
 	max = max || 255;
@@ -21,7 +23,6 @@ var extend = function(obj, extObj) {
 var CanvasTools = {
 	filters:{
 		grayscale:function (options) {
-			
 			this.map(function (r,g,b,a) {
 				var avg=((r+g+b)/3);
 				return [avg,avg,avg,a];

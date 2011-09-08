@@ -1,11 +1,15 @@
-# Javascript Canvas Filters
+# Javascript Canvas Tools
 
-Extends Javascript&#8217;s native CanvasRenderingContext2D by adding a set of filters and a filter calling method.
+Offers easy filtering and blending.
 
 The following filters are included
 
 * __grayscale__ : converts canvas to black and white
 * __noise__ : adds noise to canvas, very configurable
+
+## Methods
+
+* 
 
 ## Usage
 
