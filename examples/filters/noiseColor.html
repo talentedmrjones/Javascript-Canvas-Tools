@@ -14,13 +14,11 @@
 			(function(){
 				
 				/* noiseColor() ON A SOLID COLOR */
-				console.profile();
+				
 				Canvas = new CanvasTools.Canvas('cvs1'); 	// reference the 2d rendering context
 								
-
-				
-				// apply noise filter to canvas
-				var options = {rgb:[255,0,255], max:20} // keep random opacity <= .2 or 20%
+				// define filter and general options
+				var options = {rgb:[255,0,255], max:20} // rgb:[r,g,b] (purple) and keep random opacity <= .2 or 20%
 				,general = {
 					pre:function(){
 						// 'this' refers to the Canvas instance
@@ -30,9 +28,9 @@
 						this.context.fillRect(0,0,300,300);
 					}
 				}
-
+				
+				// apply noise filter to canvas
 				Canvas.filter('noiseColor', options, general);
-				console.profileEnd();
 				
 			})()
 		</script>
