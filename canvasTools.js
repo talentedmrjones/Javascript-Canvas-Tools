@@ -7,6 +7,7 @@ var Floor=Math.floor
 ,Min=Math.min
 ,Max=Math.max;
 
+// filters run significantly slower by calling rand() vs doing the calculation directly
 var rand=function(min,max){
 	min = min || 0;
 	max = max || 255;
@@ -49,7 +50,7 @@ var CanvasTools = {
 		,noiseGray:{
 			defaults:{"amount":100,"min":0,"max":255,"opacity":.5}
 			,method:function(o,r,g,b,a){
-				var v=rand(o.min,o.max)
+				var v=Floor(o.min+(Random()*(o.max-o.min))) // filters run up to 65% faster without keeping this random range calculation
 				,p=[];
 				// out = alpha * new + (1 - alpha) * old
 				p[0]=o.opacity * v + (1-o.opacity)*r;
@@ -62,7 +63,8 @@ var CanvasTools = {
 		,noiseColor:{
 			defaults:{"min":0,"max":100,"rgb":[255,0,0]}
 			,method:function (o,r,g,b,a) {
-				var opacity=v/100
+				var v=Floor(o.min+(Random()*(o.max-o.min)))
+				,opacity=v/100
 				,p=[];
 				// out = alpha * new + (1 - alpha) * old
 				p[0]=opacity * o.rgb[0] + (1-opacity)*r;
@@ -76,9 +78,9 @@ var CanvasTools = {
 			defaults:{"min":0,"max":255,"opacity":.5}
 			,method:function (o,r,g,b,a) {
 				var 
-				nr=rand() // new red value
-				,ng=rand() // new green value 
-				,nb=rand() // new blue value
+				nr=Floor(o.min+(Random()*(o.max-o.min))) // new red value
+				,ng=Floor(o.min+(Random()*(o.max-o.min))) // new green value 
+				,nb=Floor(o.min+(Random()*(o.max-o.min))) // new blue value
 				,p=[];
 				// out = alpha * new + (1 - alpha) * old
 				p[0]=o.opacity * nr + (1-o.opacity)*r;

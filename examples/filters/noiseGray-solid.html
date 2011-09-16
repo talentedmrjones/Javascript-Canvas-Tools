@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+
+		<canvas id="cvs1" width="300" height="300"></canvas>
+
+		<script type="text/javascript" src="../../canvasTools.js"></script>
+
+		<script type="text/javascript">
+			(function(){
+				
+				/* NOISE ON A SOLID COLOR */
+				console.profile();
+				Canvas = new CanvasTools.Canvas('cvs1'); 	// reference the 2d rendering context
+								
+
+				
+				// apply noise filter to canvas
+				var options = {opacity:.2}
+				,general = {
+					pre:function(){
+						// 'this' refers to the Canvas instance
+						
+						// draw image to canvas
+						this.context.fillStyle='orange';
+						this.context.fillRect(0,0,300,300);
+					}
+				}
+
+				Canvas.filter('noiseGray', options, general);
+				console.profileEnd();
+				
+			})()
+		</script>
+		
+	</body>
+</html>
