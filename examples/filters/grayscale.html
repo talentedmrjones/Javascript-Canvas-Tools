@@ -6,28 +6,40 @@
 	</head>
 	<body>
 		<img src="../fern.jpg" id="img1" />
-		<canvas id="cvs1" ></canvas>
+		<canvas id="cvs1" width="300" height="300"></canvas>
+		<canvas id="cvs2" width="300" height="300"></canvas>
 
 		<script type="text/javascript" src="../../canvasTools.js"></script>
 
 		<script type="text/javascript">
 			(function(){
+
 				var img = document.getElementById('img1') 	// reference the image element
-				,Canvas1 = new CanvasTools.Canvas('cvs1')		// refernce the canvas Object
+				,Canvas = new CanvasTools.Canvas('cvs1')		// get a new CanvasTools.Canvas instance
 				;
 				
+				img.onload=function(){
 
-				// apply filter to canvas, using "pre" callback to manipulate canvas prior to filtering
-				Canvas1.filter('grayscale',{},{
-					pre:function(){
-						this.canvas.width=img.width;
-						this.canvas.height=img.height;
-						
-						// draw image to canvas
-						this.context.drawImage(img,0,0);
-					}
-				});
+					// apply filter with human eye perception weighted calculation (default)
+					Canvas.filter('grayscale',{},{
+						pre:function(){
+							
+							// draw image to canvas
+							this.context.drawImage(img,0,0);
+						}
+					});	
+								
+					// apply filter without weighted calculation
+					Canvas.setCanvas('cvs2').filter('grayscale',{weighted:false},{
+						pre:function(){
+							
+							// draw image to canvas
+							this.context.drawImage(img,0,0);
+						}
+					});	
+				}
 				
+
 			})()
 		</script>
 		

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<img src="../fern.jpg" id="img1" />
+		<canvas id="cvs1" width="300" height="300"></canvas>
+
+		<script type="text/javascript" src="../../canvasTools.js"></script>
+
+		<script type="text/javascript">
+			(function(){
+				
+				/* NOISE ON AN IMAGE */
+
+				var img = document.getElementById('img1') 					// reference the image element
+				,Canvas = new CanvasTools.Canvas('cvs1'); 	// reference the 2d rendering context
+								
+				img.onload=function(){
+					console.profile();
+					// apply noise filter to canvas
+					var options = {opacity:.2}
+					,general = {
+						pre:function(){
+							// 'this' refers to the Canvas instance
+							
+							// draw image to canvas
+							this.context.drawImage(img,0,0);
+			
+						}
+					};
+
+					
+					Canvas.filter('noiseGray', options, general);
+					console.profileEnd();
+				}
+				
+				
+				
+			})()
+		</script>
+		
+	</body>
+</html>
