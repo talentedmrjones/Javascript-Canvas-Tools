@@ -102,68 +102,13 @@ var CanvasTools = {
 			}
 		} // invert ()
 	} // Filters
-	,Adjustments:{
-		levels:function (options) {
-			var defaults = {
-				gamma:1
-				,input:{
-					min:0
-					,max:255
-				},
-				output:{
-					min:0
-					,max:255
-				}
-			}
-			,o=extend(defaults,options)
-			,minInput = o.input.min/255
-			,maxInput = o.input.max/255
-			,minOutput = o.output.min/255
-			,maxOutput = o.output.max/255;
-			
-			
-			this.map(function(r,g,b,a){
-				var p=[],i,color;
 
-				p[0]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((r/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
-				p[1]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((g/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
-				p[2]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((b/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
-
-
-				p[3]=a;
-				return p;
-			});
-			
-		}
-	} // Adjustments
 	,Canvas:function (canvas) {
 	
 		this.canvas=null;
 		this.context=null;
 		this.imageData=null;
 		this.setCanvas(canvas);
-
-		this.adjust = function (a,o) {
-			
-			if ('object'!=typeof o) {
-				o={};
-			}
-			
-			if ('function' == typeof o.pre) {
-				o.pre.apply(this);
-			}
-			
-			this.imageData=this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
-			CanvasTools.Adjustments[a].call(this,o);
-			write.call(this);
-			
-			if ('function' == typeof o.post) {
-				o.post.apply(this);
-			}
-			
-			return this;
-		};
-		
 
 	} // Canvas()
 }; // CanvasTools
