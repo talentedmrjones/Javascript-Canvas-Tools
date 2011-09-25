@@ -363,7 +363,7 @@ CanvasTools.Canvas.prototype.setCanvas = function (element) {
 	if (typeof element == 'string') {	
 		element = document.getElementById(element);
 	} else if (element.length==0) {
-		canvas = document.createElement('canvas');
+		element = document.createElement('canvas');
 	}
 	
 	if (true===element instanceof HTMLImageElement) {
@@ -371,14 +371,15 @@ CanvasTools.Canvas.prototype.setCanvas = function (element) {
 		canvas.width=element.width;
 		canvas.height=element.height;
 		canvas.getContext('2d').drawImage(element,0,0);
+		element = canvas;
 	}
 
-	if (false===canvas instanceof HTMLCanvasElement) {
+	if (false===element instanceof HTMLCanvasElement) {
 		throw new Error('canvas is required as HTMLCanvasElement, HTMLImageElement, or a string representing the id of a canvas or img element.');
 	}
 	
-	this.canvas = canvas;
-	this.context = canvas.getContext('2d');
+	this.canvas = element;
+	this.context = this.canvas.getContext('2d');
 	
 	return this;
 };
