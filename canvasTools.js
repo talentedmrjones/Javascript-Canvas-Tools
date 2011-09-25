@@ -149,7 +149,7 @@ var CanvasTools = {
 			p[3] = (ta*alpha + ba*ac);
 			
 			return p;
-		}
+		} // normal
 		,multiply:function (tr, tg, tb, ta, br, bg, bb, ba, alpha) {
 		        
 		        t = br * tr + 0x80;
@@ -162,6 +162,15 @@ var CanvasTools = {
 			return CanvasTools.Blends.normal(or, og, ob, ta, br, bg, bb, ba, alpha);
 			
 		} // multiply ()
+		,screen:function (tr, tg, tb, ta, br, bg, bb, ba, alpha) {
+			
+			or=255 - (((255 - tr)*(255 - br))/255);
+			og=255 - (((255 - tg)*(255 - bg))/255);
+			ob=255 - (((255 - tb)*(255 - bb))/255);
+			
+			return CanvasTools.Blends.normal(or, og, ob, ta, br, bg, bb, ba, alpha);
+			
+		} // screen ()
 	} // Blends
 	,Canvas:function (canvas) {
 
