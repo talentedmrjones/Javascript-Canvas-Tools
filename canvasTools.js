@@ -127,19 +127,13 @@ var CanvasTools = {
 		}// levels	
 	} // Adjustments
 	,Blends:{
-		linearBurn:function (tr, tg, tb, ta, br, bg, bb, ba) {
+		linearBurn:function (tr, tg, tb, ta, br, bg, bb, ba, alpha) {
 
-			tr=((br+tr) < 255 ) ? 0 : (br+tr-255);
-			tg=((bg+tg) < 255 ) ? 0 : (bg+tg-255);
-			tb=((bb+tb) < 255 ) ? 0 : (bb+tb-255);
+			or=((br+tr) < 255 ) ? 0 : (br+tr-255);
+			og=((bg+tg) < 255 ) ? 0 : (bg+tg-255);
+			ob=((bb+tb) < 255 ) ? 0 : (bb+tb-255);
 
-			// p = top opacity * top + (1 - top opacity) * bottom
-
-			o=ta/255;
-			br=o * tr + (1-o)*br;
-			bg=o * tg + (1-o)*bg;
-			bb=o * tb + (1-o)*bb;
-			return [br,bg,bb,255];
+			return CanvasTools.Blends.normal(or, og, ob, ta, br, bg, bb, ba, alpha);
 			
 		} // linearBurn()
 		,normal:function (tr, tg, tb, ta, br, bg, bb, ba, alpha) {
@@ -358,7 +352,7 @@ CanvasTools.Canvas.prototype.blend = function (mode, top, alpha, general) {
 CanvasTools.Canvas.prototype.setCanvas = function (element) {
 
 	if (typeof element == 'string') {	
-		canvas = document.getElementById(element);
+		element = document.getElementById(element);
 	} else if (element.length==0) {
 		canvas = document.createElement('canvas');
 	}

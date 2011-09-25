@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<img src="../images/talentedmrjones-alpha.png" alt="" id="logo" />
+		<img src="../images/fern.jpg" alt="" id="fern" />
+
+		<script type="text/javascript" src="../../canvasTools.js"></script>
+
+		<script type="text/javascript">
+			(function(){
+				
+				window.addEventListener('load', function () {
+				
+
+					var topCanvas = new CanvasTools.Canvas('logo');
+					var bottomCanvas = new CanvasTools.Canvas('fern');
+					
+					bottomCanvas.blend('linearBurn', topCanvas, .7, {
+						post:function () {
+							document.getElementsByTagName('body')[0].appendChild(bottomCanvas.canvas);
+						}
+					});
+				});
+
+
+			})();
+		</script>
+	</body>
+</html>
