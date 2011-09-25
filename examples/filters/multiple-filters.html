@@ -5,7 +5,7 @@
 		<title></title>
 	</head>
 	<body>
-		<img src="../fern.jpg" id="img1" />
+		<img src="../images/fern.jpg" id="img1" />
 		<canvas id="cvs1" width="300" height="300"></canvas>
 
 
@@ -15,11 +15,11 @@
 			(function(){
 
 				var img = document.getElementById('img1') 	// reference the image element
-				,Canvas = new CanvasTools.Canvas('cvs1')		// get a new CanvasTools.Canvas instance
 				;
 				
 				img.onload=function(){
-
+					console.profile();
+					var Canvas = new CanvasTools.Canvas('cvs1')		// get a new CanvasTools.Canvas instance
 
 					// apply grayscale followed by invert
 					Canvas.filter(['grayscale','invert'],null,{
@@ -29,7 +29,7 @@
 							this.context.drawImage(img,0,0);
 						}
 					});	
-
+					console.profileEnd();
 				}
 				
 

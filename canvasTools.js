@@ -27,12 +27,6 @@ var extend = function(obj, extObj) {
     return obj;
 };
 
-var write = function () {
-	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
-	this.context.putImageData(this.imageData,0,0);
-}
-
-
 var CanvasTools = {
 	Filters:{
 		grayscale:{
@@ -103,8 +97,8 @@ var CanvasTools = {
 		} // invert ()
 	} // Filters
 	,Adjustments:{
-		levels:function (options) {
-			var defaults = {
+		levels:{
+			defaults:{
 				gamma:1
 				,input:{
 					min:0
@@ -115,75 +109,149 @@ var CanvasTools = {
 					,max:255
 				}
 			}
-			,o=extend(defaults,options)
-			,minInput = o.input.min/255
-			,maxInput = o.input.max/255
-			,minOutput = o.output.min/255
-			,maxOutput = o.output.max/255;
-			
-			
-			this.map(function(r,g,b,a){
-				var p=[],i,color;
+			,method:function(o,r,g,b,a){
+				var minInput = o.input.min/255
+				,maxInput = o.input.max/255
+				,minOutput = o.output.min/255
+				,maxOutput = o.output.max/255
+				p=[]
+				,i;
 
 				p[0]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((r/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
 				p[1]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((g/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
 				p[2]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((b/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
-
-
 				p[3]=a;
+				
 				return p;
-			});
-			
-		}
+			}
+		}// levels	
 	} // Adjustments
-	,Canvas:function (canvas) {
-	
-		this.canvas=null;
-		this.context=null;
-		this.imageData=null;
-		this.setCanvas(canvas);
+	,Blends:{
+		linearBurn:function (tr, tg, tb, ta, br, bg, bb, ba) {
 
-		this.adjust = function (a,o) {
+			tr=((br+tr) < 255 ) ? 0 : (br+tr-255);
+			tg=((bg+tg) < 255 ) ? 0 : (bg+tg-255);
+			tb=((bb+tb) < 255 ) ? 0 : (bb+tb-255);
+
+			// p = top opacity * top + (1 - top opacity) * bottom
+
+			o=ta/255;
+			br=o * tr + (1-o)*br;
+			bg=o * tg + (1-o)*bg;
+			bb=o * tb + (1-o)*bb;
+			return [br,bg,bb,255];
 			
-			if ('object'!=typeof o) {
-				o={};
-			}
+		} // linearBurn()
+		,normal:function (tr, tg, tb, ta, br, bg, bb, ba, alpha) {
+
+			var a=(ta*alpha)/255 // float value of top opacity (weighted by alpha)
+			,ac = 1-a
+			,p=[];
 			
-			if ('function' == typeof o.pre) {
-				o.pre.apply(this);
-			}
+			// p = opacity * top color + (1 - opacity) * bottom
+			p[0] = a*tr + ac*br;
+			p[1] = a*tg + ac*bg;
+			p[2] = a*tb + ac*bb;
+			p[3] = (ta*alpha + ba*ac);
 			
-			this.imageData=this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
-			CanvasTools.Adjustments[a].call(this,o);
-			write.call(this);
+			return p;
+		}
+		,multiply:function (tr, tg, tb, ta, br, bg, bb, ba, alpha) {
+		        
+		        t = br * tr + 0x80;
+                or = ((t >> 8) + t) >> 8;
+                t = bg * tg + 0x80;
+                og = ((t >> 8) + t) >> 8;
+                t = bb * tb + 0x80;
+                ob = ((t >> 8) + t) >> 8;
+                
+			return CanvasTools.Blends.normal(or, og, ob, ta, br, bg, bb, ba, alpha);
 			
-			if ('function' == typeof o.post) {
-				o.post.apply(this);
-			}
-			
-			return this;
-		};
-		
+		} // multiply ()
+	} // Blends
+	,Canvas:function (canvas) {
+
+		// instance specific properties and methods
+		this.canvas=null; 
+		this.context=null;
+		this.setCanvas(canvas);		
 
 	} // Canvas()
 }; // CanvasTools
 
-	/*
-		Function: filter
+
+// shared (prototypical) properties and methods
+
+CanvasTools.Canvas.prototype.adjust = function (adjustments,options,general) {
 		
-		Applies filters to the Canvas instance
-		
-		Parameters:
-		
-			array|string filters - the name of a single filter or array of filters to run. e.g: 'invert' OR ['grayscale','noise'] 
-			array|object options - a single object or, an array of options objects. e.g:{} OR [{},{}] indexes of options should match index of respective filter
-			object general - a JSON object containing general options such as pre and post callback functions
-		
-		Returns:
-		
-		  CanvasTools.Canvas 'this' The original calling instance.
+	var a
+	,ao={}
+	,options = options || [{}]
+	,general=general || {};
 	
-	*/
+	if ('string'==typeof adjustments) {
+		adjustments=[adjustments]; // is a single name, make an array for the loop below
+	} else if (!adjustments instanceof Array) { //	otherwise SHOULD be an array
+		throw new Error("'adjustments' argument should be a string or array of strings referring to available adjustments.");
+	}
+	
+	if ('undefined'==typeof options.length) {
+		options=[options]; // make it an array so it works with the following loop
+	}
+	
+	// merge passed options with defaults for each filter/options pair
+	for (a=0; a<adjustments.length; a++) {
+		ao[adjustments[a]]=extend(CanvasTools.Adjustments[adjustments[a]].defaults,options[a]);
+	}
+	
+	// run pre filter callback
+	if ('function' == typeof general.pre) {
+		general.pre.apply(this);
+	}
+	
+	// store reference to the image data;
+	var imageData=this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
+	var d = imageData.data;
+	
+	// loop over each pixel	
+	for (i=0; i<d.length; i+=4) {
+		// run each adjustment on each pixel
+		for (a=0; a<adjustments.length; a++) {
+			p = CanvasTools.Adjustments[adjustments[a]].method(ao[adjustments[a]],d[i],d[i+1],d[i+2],d[i+3]);
+			d[i] = p[0];
+			d[i+1] = p[1];
+			d[i+2] = p[2];
+			d[i+3] = p[3];
+		}
+	}
+
+	// write the imageData back to the canvas
+	this.setImageData(imageData);
+	
+	// run the post filter callback
+	if ('function' == typeof general.post) {
+		general.post.apply(this);
+	}
+
+	// return this to support chaining
+	return this;
+};
+
+
+
+/*
+	Function: filter
+		Applies filters to the Canvas instance
+	
+	Parameters:
+		array|string filters - the name of a single filter or array of filters to run. e.g: 'invert' OR ['grayscale','noise'] 
+		array|object options - a single object or, an array of options objects. e.g:{} OR [{},{}] indexes of options should match index of respective filter
+		object general - a JSON object containing general options such as pre and post callback functions
+	
+	Returns:
+	  CanvasTools.Canvas 'this' The original calling instance.
+
+*/
 CanvasTools.Canvas.prototype.filter = function (filters,options,general) {
 		
 	var fo={}
@@ -194,7 +262,6 @@ CanvasTools.Canvas.prototype.filter = function (filters,options,general) {
 		filters=[filters]; // is a single name, make an array for the loop below
 	} else if (!filters instanceof Array) { //	otherwise SHOULD be an array
 		throw new Error('filters argument should be a string or array.');
-		return false;
 	}
 	
 	if ('undefined'==typeof options.length) {
@@ -212,8 +279,8 @@ CanvasTools.Canvas.prototype.filter = function (filters,options,general) {
 	}
 	
 	// store reference to the image data;
-	this.imageData=this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
-	var d = this.imageData.data;
+	var imageData=this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
+	var d = imageData.data;
 	
 	// loop over each pixel	
 	for (i=0; i<d.length; i+=4) {
@@ -228,7 +295,7 @@ CanvasTools.Canvas.prototype.filter = function (filters,options,general) {
 	}
 
 	// write the imageData back to the canvas
-	write.call(this);
+	this.setImageData(imageData);
 	
 	// run the post filter callback
 	if ('function' == typeof general.post) {
@@ -239,17 +306,72 @@ CanvasTools.Canvas.prototype.filter = function (filters,options,general) {
 	return this;
 };
 
-CanvasTools.Canvas.prototype.setCanvas = function (canvas) {
+CanvasTools.Canvas.prototype.blend = function (mode, top, alpha, general) {
 	
-	canvas = canvas || '';
+	if ('string'!=typeof mode || !mode in CanvasTools.Blends) {
+		throw new Error("'mode' argument should be a string, and should refer to an available blending mode.");
+	}
+	
+	if (!top instanceof CanvasTools.Canvas) {
+		throw new Error("'top' argument must be an instance of CanvasTools.Canvas");
+	}
+		
+	if ('number'!=typeof alpha || alpha < 0 || alpha > 1) {
+		alpha = 1;
+	}
+	
+	general = general || {};
+	
+	// run pre filter callback
+	if ('function' == typeof general.pre) {
+		general.pre.apply(this);
+	}
+	
+	// store reference to the image data;
+	var imageData=this.context.getImageData(0,0,this.canvas.width,this.canvas.height);
+	var b = imageData.data;
 
-	if (typeof canvas == 'string') {
-		canvas = document.getElementById(canvas);
-	}	
+	var topImageData=top.context.getImageData(0,0,top.canvas.width,top.canvas.height);
+	var t = topImageData.data;
+	
+	// loop over each pixel	
+	for (i=0; i<t.length; i+=4) {
+		p = CanvasTools.Blends[mode](t[i], t[i+1], t[i+2], t[i+3], b[i], b[i+1], b[i+2], b[i+3], alpha);
+		b[i] = p[0];
+		b[i+1] = p[1];
+		b[i+2] = p[2];
+		b[i+3] = p[3];
+	}
+
+	// write the imageData back to the canvas
+	this.setImageData(imageData);
+	
+	// run the post filter callback
+	if ('function' == typeof general.post) {
+		general.post.apply(this);
+	}
+
+	// return this to support chaining
+	return this;
+};
+
+CanvasTools.Canvas.prototype.setCanvas = function (element) {
+
+	if (typeof element == 'string') {	
+		canvas = document.getElementById(element);
+	} else if (element.length==0) {
+		canvas = document.createElement('canvas');
+	}
+	
+	if (true===element instanceof HTMLImageElement) {
+		var canvas = document.createElement('canvas');
+		canvas.width=element.width;
+		canvas.height=element.height;
+		canvas.getContext('2d').drawImage(element,0,0);
+	}
 
 	if (false===canvas instanceof HTMLCanvasElement) {
-		throw new Error('canvas is required as HTMLCanvasElement or String representing the id of a canvas element.');
-		return false;
+		throw new Error('canvas is required as HTMLCanvasElement, HTMLImageElement, or a string representing the id of a canvas or img element.');
 	}
 	
 	this.canvas = canvas;
@@ -258,18 +380,15 @@ CanvasTools.Canvas.prototype.setCanvas = function (canvas) {
 	return this;
 };
 
-CanvasTools.Canvas.prototype.map = function (f) {
-	
-	var d = this.imageData.data;
-	
-	for (i=0; i<d.length; i+=4) {
-		p = f(d[i],d[i+1],d[i+2],d[i+3]);
-		d[i] = p[0];
-		d[i+1] = p[1];
-		d[i+2] = p[2];
-		d[i+3] = p[3];
-	}
-};
+CanvasTools.Canvas.prototype.setImageData = function (imageData) {
+	// this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+	this.context.putImageData(imageData,0,0);
+}
+
+
+CanvasTools.Canvas.prototype.getPNG = function () {
+	return this.canvas.toDataURL("image/png");
+}
 
 
 
