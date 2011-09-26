@@ -394,7 +394,7 @@ CanvasTools.Canvas.prototype.getPNG = function () {
 	return this.canvas.toDataURL("image/png");
 }
 
-CanvasTools.Canvas.prototype.getWidth = function (w,h) {
+CanvasTools.Canvas.prototype.setDimensions = function (w,h) {
 	this.canvas.width=w;
 	this.canvas.height=h;
 	return this;
