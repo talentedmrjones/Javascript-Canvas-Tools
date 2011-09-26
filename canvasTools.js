@@ -360,13 +360,10 @@ CanvasTools.Canvas.prototype.blend = function (mode, top, alpha, general) {
 
 CanvasTools.Canvas.prototype.setCanvas = function (element) {
 
-	switch (true) {
-		case (typeof element == 'string' && element.length > 0):
-			element = document.getElementById(element);
-			break;
-		default:
-			element = document.createElement('canvas');
-			break;
+	if (typeof element == 'string' && element.length > 0) {	
+		element = document.getElementById(element);
+	} else {
+		element = document.createElement('canvas');
 	}
 	
 	if (true===element instanceof HTMLImageElement) {
@@ -397,19 +394,7 @@ CanvasTools.Canvas.prototype.getPNG = function () {
 	return this.canvas.toDataURL("image/png");
 }
 
-CanvasTools.Canvas.prototype.setDimensions = function (w,h) {
-	this.canvas.width=w;
-	this.canvas.height=h;
-	return this;
-}
 
-CanvasTools.Canvas.prototype.getWidth = function () {
-	return this.canvas.width;
-}
-
-CanvasTools.Canvas.prototype.getHeight = function () {
-	return this.canvas.height;
-}
 
 // check namespace and assign CanvasTools to window
 if ('CanvasTools' in window) {
