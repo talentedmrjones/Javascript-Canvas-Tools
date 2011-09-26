@@ -1,6 +1,8 @@
-# Javascript Canvas Tools v0.3
+# Javascript Canvas Tools v0.3.1
 
 Offers easy canvas manipulation including filters, adjustments, blending modes.
+
+**As seen in use on [talentedmrjones.com](http://talentedmrjones.com)**
 
 ## Instantiation
 	
