@@ -115,7 +115,7 @@ var CanvasTools = {
 				,minOutput = o.output.min/255
 				,maxOutput = o.output.max/255
 				p=[]
-				,i;
+				;
 
 				p[0]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((r/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
 				p[1]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((g/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
