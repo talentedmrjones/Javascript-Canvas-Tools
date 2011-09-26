@@ -157,7 +157,7 @@ _options_ defaults:
 
 ## Blending Modes
 
-Blending modes are designed to function identically to Photoshop.
+Blending modes are designed to function identically to Photoshop. Thanks to [Jerry Huxtable](http://www.jhlabs.com/index.html) for his [Java Image Filters](http://www.jhlabs.com/ip/filters/index.html). They were of the utmost help in applying the correct equations.
 
 ### blend ( mode , top , _[ alpha , general ]_ )
 
