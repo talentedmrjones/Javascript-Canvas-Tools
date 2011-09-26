@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="../../canvasTools.js"></script>
 
 		<script type="text/javascript">
-			(function(){
+			window.addEventListener('load', function(){
 				
 				/* noiseColor() ON A SOLID COLOR */
 				
@@ -32,7 +32,7 @@
 				// apply noise filter to canvas
 				Canvas.filter('noiseColor', options, general);
 				
-			})()
+			});
 		</script>
 		
 	</body>

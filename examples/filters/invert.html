@@ -11,23 +11,23 @@
 		<script type="text/javascript" src="../../canvasTools.js"></script>
 
 		<script type="text/javascript">
-			(function(){
-				var img = document.getElementById('img1') 	// reference the image element
-				,Canvas = new CanvasTools.Canvas('cvs1')	// get a CanvasTools.Canvas instance
+			window.addEventListener('load', function(){
+
+				var Canvas = new CanvasTools.Canvas('cvs1')	// get a CanvasTools.Canvas instance
 				;
 				
 				/* invert() ON IMAGE */
-				img.onload = function () {
-					Canvas.filter('invert',{}, {
-						pre:function(){
-							/* 'this' refers to the Canvas1 instance */
-														
-							// draw image to canvas
-							this.context.drawImage(img,0,0);
-						}
-					});
-				}
-			})()
+
+				Canvas.filter('invert',{}, {
+					pre:function(){
+						/* 'this' refers to the Canvas1 instance */
+													
+						// draw image to canvas
+						this.context.drawImage(document.getElementById('img1'),0,0);
+					}
+				});
+
+			});
 		</script>
 		
 	</body>

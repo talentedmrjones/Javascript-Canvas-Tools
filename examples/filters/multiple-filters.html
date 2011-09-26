@@ -5,36 +5,31 @@
 		<title></title>
 	</head>
 	<body>
-		<img src="../images/fern.jpg" id="img1" />
-		<canvas id="cvs1" width="300" height="300"></canvas>
 
 
 		<script type="text/javascript" src="../../canvasTools.js"></script>
 
 		<script type="text/javascript">
-			(function(){
+			window.addEventListener('load', function(){
 
-				var img = document.getElementById('img1') 	// reference the image element
-				;
-				
-				img.onload=function(){
-					console.profile();
-					var Canvas = new CanvasTools.Canvas('cvs1')		// get a new CanvasTools.Canvas instance
+				var Canvas = new CanvasTools.Canvas('cvs1')		// get a new CanvasTools.Canvas instance
 
-					// apply grayscale followed by invert
-					Canvas.filter(['grayscale','invert'],null,{
-						pre:function(){
-							
-							// draw image to canvas
-							this.context.drawImage(img,0,0);
-						}
-					});	
-					console.profileEnd();
-				}
+				// apply grayscale followed by invert
+				Canvas.filter(['grayscale','invert'],null,{
+					pre:function(){
+						
+						// draw image to canvas
+						this.context.drawImage(document.getElementById('img1'),0,0);
+					}
+				});	
+
+
 				
 
-			})()
+			});
 		</script>
-		
+				<img src="../images/fern.jpg" id="img1" />
+		<canvas id="cvs1" width="300" height="300"></canvas>
+
 	</body>
 </html>

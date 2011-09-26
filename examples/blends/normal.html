@@ -12,26 +12,21 @@
 		<script type="text/javascript" src="../../canvasTools.js"></script>
 
 		<script type="text/javascript">
-			(function(){
-				var logo = document.getElementById('logo')
-				,fern = document.getElementById('fern');
-				;
+			window.addEventListener('load', function(){
+		
 				
-				logo.onload=function(){
-					fern.onload = function () {
-						
-						topCanvas = new CanvasTools.Canvas(logo);
-						bottomCanvas = new CanvasTools.Canvas(fern);
-						
-						bottomCanvas.blend('normal', topCanvas,1, {
-							post:function () {
-								document.getElementsByTagName('body')[0].appendChild(bottomCanvas.canvas);
-							}
-						});
-					};
-				};
+				var topCanvas = new CanvasTools.Canvas('logo')
+				, bottomCanvas = new CanvasTools.Canvas('fern');
+				
+				bottomCanvas.blend('normal', topCanvas,1, {
+					post:function () {
+						document.getElementsByTagName('body')[0].appendChild(bottomCanvas.canvas);
+					}
+				});
 
-			})();
+
+
+			});
 		</script>
 		
 

@@ -5,38 +5,33 @@
 		<title></title>
 	</head>
 	<body>
-		<img src="" id="img1" />
+		<img src="../images/fern.jpg" id="img1" />
 		<canvas id="cvs1" width="300" height="300"></canvas>
 
 		<script type="text/javascript" src="../../canvasTools.js"></script>
 
 		<script type="text/javascript">
-			(function(){
+			window.addEventListener('load', function(){				
 
-				var img = document.getElementById('img1') 	// reference the image element
-				;
+				var Canvas = new CanvasTools.Canvas('cvs1');		// reference the canvas Object
 				
-				img.onload=function(){
-					var Canvas = new CanvasTools.Canvas('cvs1')		// reference the canvas Object
+				// apply levels adjustment with lower gamma, default input/output
+				Canvas.adjust('levels',
+				{
+					gamma:.6
+					,input:{
+						min:0
+						,max:255
+					}
+					,output:{
+						min:0
+						,max:255
+					}
+				}, {pre:function(){
+					this.context.drawImage(document.getElementById('img1'),0,0);
+				}});
 
-					Canvas.context.drawImage(img,0,0);
-					// apply levels adjustment with default input/output and lower gamma
-					Canvas.adjust('levels',
-					{
-						gamma:.6
-						,input:{
-							min:0
-							,max:255
-						}
-						,output:{
-							min:0
-							,max:255
-						}
-					});
-				};
-				
-				img.src="../images/fern.jpg";
-			})()
+			});
 		</script>
 		
 	</body>

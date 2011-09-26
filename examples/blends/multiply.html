@@ -5,35 +5,26 @@
 		<title></title>
 	</head>
 	<body>
-		
-		<img src="../images/talentedmrjones-opaque.png" alt="" id="logo" />
-		<img src="../images/fern.jpg" alt="" id="fern" />
-
 		<script type="text/javascript" src="../../canvasTools.js"></script>
-
 		<script type="text/javascript">
-			(function(){
-				var logo = document.getElementById('logo')
-				,fern = document.getElementById('fern');
-				;
 				
-				logo.onload=function(){
-					fern.onload = function () {
-						
-						topCanvas = new CanvasTools.Canvas(logo);
-						bottomCanvas = new CanvasTools.Canvas(fern);
-						
-						bottomCanvas.blend('multiply', topCanvas, 1, {
-							post:function () {
-								document.getElementsByTagName('body')[0].appendChild(bottomCanvas.canvas);
-							}
-						});
-					};
-				};
+			window.addEventListener('load', function () {
 
-			})();
+				var topCanvas = new CanvasTools.Canvas('logo');
+				var bottomCanvas = new CanvasTools.Canvas('fern');
+				
+				bottomCanvas.blend('multiply', topCanvas, 1, {
+					post:function () {
+						document.getElementsByTagName('body')[0].appendChild(bottomCanvas.canvas);
+					}
+				});
+			});
+
+
 		</script>
 		
+		<img src="../images/talentedmrjones-alpha.png" alt="" id="logo" />
+		<img src="../images/fern.jpg" alt="" id="fern" />
 
 	</body>
 </html>
