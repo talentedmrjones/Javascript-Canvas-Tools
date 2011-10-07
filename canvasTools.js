@@ -426,7 +426,53 @@ CanvasTools.Canvas.prototype.getHeight = function () {
 	return this.canvas.height;
 }
 
+CanvasTools.Canvas.prototype.getHistogram = function (channel, Canvas) {
+	
+	var data = this.context.getImageData(0,0,this.canvas.width,this.canvas.height).data
+	,pixels=this.canvas.width*this.canvas.height
+	,averages={red:Array.fill(256,0),green:Array.fill(256,0),blue:Array.fill(256,0),luminosity:Array.fill(256,0)}
+	,avg
+	,i
+	,canvas = document.createElement('canvas')
+	,context = canvas.getContext('2d')
+	,x,y,total=0;
+	canvas.width=256;
+	canvas.height=100;
+	
+	for (i=0; i<data.length; i+=4) {
+		avg = Math.ceil(((data[i]*.3)+(data[i+1]*.59)+(data[i+2]*.11)));
+		averages.red[data[i]]++;
+		averages.green[data[i+1]]++;
+		averages.blue[data[i+2]]++;
+		averages.luminosity[avg]++;
+	}
+	
+	/* 	thanks to Peter Facey for his RGB explanation http://www.brisk.org.uk/photog/histo3.html */
+	if (channel=='rgb') {
+		averages.rgb=Array.fill(256,0);
+		for (x=0;x<256;x++) {
+			averages.rgb[x]=averages.red[x] + averages.green[x] + averages.blue[x];
+		}
+	}
 
+	context.strokeStyle = '#000';
+	context.lineWidth   = 1;
+	
+	var max = Array.max(averages[channel]);
+
+	averages[channel].forEach(function(y,x) {
+		
+		y=y|0;
+		
+		y=Math.floor(((y/max)*100));
+
+		context.moveTo(x+.5,100);
+		context.lineTo(x+.5,100-y);
+		context.stroke();
+	});
+	
+	Canvas.setImageData(context.getImageData(0,0,256,100));
+}
 
 
 // check namespace and assign CanvasTools to window

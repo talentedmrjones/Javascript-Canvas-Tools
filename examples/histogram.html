@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<img src="images/fern.jpg" id="img1" />
+		<canvas width="256" height="100" id="cvs1"></canvas>
+		<select id="types">
+			<option value="red">Red</option>
+			<option value="green">Green</option>
+			<option value="blue">Blue</option>
+			<option value="rgb">RGB</option>
+			<option value="luminosity">Luminosity</option>
+		</select>
+		
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+		<!-- CanvasTools is not dependent on jQuery. Jquery is used for this example. -->
+		<script type="text/javascript" src="../canvasTools.js"></script>
+
+		<script type="text/javascript">
+			$(window).load( function(){				
+			
+				var CanvasImg = new CanvasTools.Canvas('img1')
+				,CanvasHistogram = new CanvasTools.Canvas('cvs1');
+				
+				$('#types').change(function(){
+					CanvasImg.getHistogram($(this).val(), CanvasHistogram);
+				}).trigger('change');
+				
+
+			});
+		</script>
+		
+	</body>
+</html>
