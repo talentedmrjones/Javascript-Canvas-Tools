@@ -1,4 +1,4 @@
-# Javascript Canvas Tools v0.3.1
+# Javascript Canvas Tools v0.3.2
 
 Offers easy canvas manipulation including filters, adjustments, blending modes.
 
@@ -178,3 +178,19 @@ blend the _top_ Canvas with the current instance. The calling instance is treate
 * _screen_
 * _multiply_
 * _linear burn_
+
+## Miscelaneous
+
+### getHistogram ( channel , Canvas )
+
+Generates a histogram of the specified channel, using _Canvas_ as the output canvas.
+
+* _channel_ may be on of the following values
+  * **_red_** charts the values of red
+  * **_green_** charts the values of green
+  * **_blue_** charts the values of blue
+  * **_rgb_** charts the values of (red+green+blue)
+  * **_luminosity_** charts the luminance values of the image (R*.3)+(G*.59)+(B*.11)
+
+* _Canvas_ is a separate canvas element set at 256x100 used to output the histogram chart (see histogram.html example)
+  
