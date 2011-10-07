@@ -27,6 +27,24 @@ var extend = function(obj, extObj) {
     return obj;
 };
 
+/* Thanks to John Resig for the array min and max http://ejohn.org/blog/fast-javascript-maxmin/ */
+Array.max = function( array ){
+    return Math.max.apply( Math, array );
+};
+
+Array.min = function( array ){
+    return Math.min.apply( Math, array );
+};
+
+Array.fill = function (length, val) {
+    var array = [];
+    while (length) {
+        array[length-1] = val;
+        length--;
+    }
+    return array;
+}
+
 var CanvasTools = {
 	Filters:{
 		grayscale:{
@@ -34,7 +52,7 @@ var CanvasTools = {
 			,method:function (o,r,g,b,a) {		
 				var avg;		
 				if (o.weighted) {
-					avg=(((r*1.299)+(g*1.587)+(b*1.114))/3);
+					avg=(((r*.299)+(g*.587)+(b*.114)));
 				} else {
 					avg=((r+g+b)/3);
 				}
@@ -407,6 +425,8 @@ CanvasTools.Canvas.prototype.getWidth = function () {
 CanvasTools.Canvas.prototype.getHeight = function () {
 	return this.canvas.height;
 }
+
+
 
 
 // check namespace and assign CanvasTools to window
