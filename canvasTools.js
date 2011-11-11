@@ -14,6 +14,7 @@ var rand=function(min,max){
 	return Floor(min+(Random()*(max-min)));
 };
 
+// why isnt this in core javascript already?
 var extend = function(obj, extObj) {
     if (arguments.length > 2) {
         for (var a = 1; a < arguments.length; a++) {
@@ -43,15 +44,16 @@ Array.fill = function (length, val) {
         length--;
     }
     return array;
-}
+};
 
 var CanvasTools = {
 	Filters:{
 		grayscale:{
 			defaults:{weighted:true}
-			,method:function (o,r,g,b,a) {		
+			,method:function (options,r,g,b,a) {		
 				var avg;		
-				if (o.weighted) {
+				if (options.weighted) {
+                    // standard luminence calculation based on the human eye's sensitivity to green
 					avg=(((r*.299)+(g*.587)+(b*.114)));
 				} else {
 					avg=((r+g+b)/3);
@@ -134,7 +136,8 @@ var CanvasTools = {
 				,maxOutput = o.output.max/255
 				p=[]
 				;
-
+                // in these cases, DRY code adversely affected performance by adding yet another function call.
+                // profiling shows that calling the calculation directly is significantly faster
 				p[0]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((r/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
 				p[1]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((g/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
 				p[2]=(minOutput+(maxOutput-minOutput)*Pow(Min(Max((b/255)-minInput, 0.0) / (maxInput-minInput), 1.0),(1/o.gamma)))*255;
@@ -145,6 +148,7 @@ var CanvasTools = {
 		}// levels	
 	} // Adjustments
 	,Blends:{
+        // functions calls in blends accept rgba values for the top and bottom layers, plus an additional alpha for final output
 		linearBurn:function (tr, tg, tb, ta, br, bg, bb, ba, alpha) {
 
 			or=((br+tr) < 255 ) ? 0 : (br+tr-255);
